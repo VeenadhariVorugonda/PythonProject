@@ -1,0 +1,13 @@
+def logic(lst, column):
+    elements = [float(item) for item in lst]
+    rows_sum = []
+    for i in range(0, len(elements), column):
+        row_elements = elements[i:i + column]
+        row_sum = sum(row_elements)
+        rows_sum.append(row_sum)
+    table = []
+    rows = len(rows_sum)
+    for i in range(rows):
+        row_elements = elements[i * column: (i + 1) * column]
+        table.append(row_elements)
+    return table, rows_sum, rows
