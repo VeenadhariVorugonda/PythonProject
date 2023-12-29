@@ -1,0 +1,168 @@
+import tkinter as tk
+from tkinter import *
+import pygame
+from PIL import Image, ImageTk
+from tkinter import ttk
+import CODE
+import cv2
+parent=tk.Tk()
+parent.title('D Math')
+parent.iconbitmap('C:\\Users\\tejas\\Downloads\\favicon.ico')
+class VideoBackground:
+    def _init_(self, window, video_source):
+        self.window = window
+        self.video_source = video_source
+        self.vid = cv2.VideoCapture(self.video_source)
+        self.canvas = tk.Canvas(window)
+        self.canvas.pack(fill=tk.BOTH, expand=True)
+        self.update_background()
+    def update_background(self):
+        ret, frame = self.vid.read()
+        if ret:
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            self.photo = ImageTk.PhotoImage(image=Image.fromarray(frame))
+            self.canvas.create_image(0, 0, image=self.photo, anchor=tk.NW)            
+        self.window.after(10, self.update_background)
+    def _del_(self):
+        if self.vid.isOpened():
+            self.vid.release()
+video_source="C:/Users/tejas/Downloads/New Project 1 (1).mp4"
+VideoBackground(parent,video_source)
+label1=tk.Label(parent,bg="pink",fg="black",height=2,text="WELCOME TO D MATH",font=("Pristina",40))
+label1.place(x=485,y=150)
+label2=tk.Label(parent,bg="pink",fg="black",height=1,text="Enter your name:",font=("Mistral",25))
+label2.place(x=670,y=300)
+entry1=tk.Entry(parent,fg="black",bg="white",bd=2)
+entry1.place(x=705,y=350)
+def play_sound():
+    pygame.mixer.init()
+    pygame.mixer.music.load("C:/Users/tejas/Downloads/mixkit-cool-interface-click-tone-2568.wav")
+    pygame.mixer.music.play()
+def Table(table_data, rows_sum,rows,new_window):
+    row_numbers = []
+    row_elements = []
+    row_sum = []
+    for i in range(rows):
+        row_numbers.append(i + 1)
+        row_elements.append(table_data[i])  
+        row_sum.append(rows_sum[i])
+    table = ttk.Treeview(new_window, columns=('rowno', 'rowele', 'sum_'), show='headings',height=4)
+    for col in ('rowno', 'rowele', 'sum_'):
+        table.column(col, width=100, stretch=True, anchor=tk.CENTER)
+        table.heading(col, text=col, anchor=tk.CENTER)
+    table.heading('rowno', text='Row Number')
+    table.heading('rowele', text='Row Element')
+    table.heading('sum_', text='Row Sum')
+    table.place(x=900,y=350)
+    for i in range(rows):
+        rowno = row_numbers[i]
+        rowele = row_elements[i]
+        sum_ = row_sum[i]
+        data = (rowno, rowele, sum_)
+        table.insert(parent='', index='end', values=data)
+def stop_input():
+     elements=[]
+     e1.config(state=tk.DISABLED)
+     stop_button.config(state=tk.DISABLED)
+     element=e1.get()
+     if element:
+        elements.append(element)
+        e1.delete(0, tk.END)
+     global lst
+     lst=[]
+     for string in elements:
+        lst=string.split()
+     e2.config(state=tk.DISABLED)
+     global column
+     column=int(e2.get())
+     e2.delete(0, tk.END)
+def window2():
+    new_window=tk.Toplevel(parent)
+    video_source="C:/Users/tejas/Downloads/New Project 2.mp4"
+    VideoBackground(new_window,video_source)
+    label=tk.Label(new_window,bg="pink",fg="black",font=("Mistral",40),text="Hello "+entry1.get()+"!")
+    label.place(x=100,y=100)
+    button1=tk.Button(new_window,text="Back",font="Stencil",bg="pink",fg="black",height=1,width=10,command=lambda:back_to_parent(new_window))
+    button1.place(x=1350,y=700)
+    lbl1=tk.Label(new_window,text="Enter list elements:",font=("Mistral",30))
+    lbl1.place(x=325,y=285)
+    lbl2=tk.Label(new_window,text="Enter column number:",font=("Mistral",30))
+    lbl2.place(x=290,y=387)
+    global e1
+    e1=tk.Entry(new_window,fg="black",bg="white",bd=2)
+    e1.place(x=580,y=305)
+    global e2
+    e2=tk.Entry(new_window,fg="black",bg="white",bd=2)
+    e2.place(x=583,y=405)
+    global stop_button
+    stop_button=tk.Button(new_window,text="Stop",bg="pink",fg="black",font="Stencil",height=1,width=10,command=stop_input)
+    stop_button.place(x=770,y=400)
+    button2=tk.Button(new_window,text="Submit",font="Stencil",bg="pink",fg="black",height=1,width=10,command=window3)
+    button2.place(x=580,y=500)
+    new_window.iconbitmap('C:\\Users\\tejas\\Downloads\\favicon.ico')
+    new_window.attributes('-fullscreen',True)
+    play_sound()
+def window3():
+    new_window=tk.Toplevel(parent)
+    video_source="C:/Users/tejas/Downloads/New Project 8.mp4"
+    VideoBackground(new_window,video_source)
+    '''image_path = "C:/Users/tejas/Downloads/New Project 10 (1).png"
+    image = Image.open(image_path)
+    image = ImageTk.PhotoImage(image)
+    image_label = ttk.Label(new_window, image=image)
+    image_label.image = image 
+    image_label.place(x=100, y=100)'''
+    label=tk.Label(new_window,bg="pink",fg="black",font=("Mistral",30),text="Your bill is:")
+    label.place(x=750,y=50)
+    button1=tk.Button(new_window,bg="pink",fg="black",font="Stencil",text="Home",height=1,width=10,command=lambda:back_to_parent(new_window))
+    button1.place(x=300,y=650)
+    button2=tk.Button(new_window,bg="pink",fg="black",font="Stencil",text="Reset",height=1,width=10,command=window2)
+    button2.place(x=600,y=650)
+    button3=tk.Button(new_window,bg="pink",fg="black",font="Stencil",text="Finish",height=1,width=10,command=window4)
+    button3.place(x=900,y=650)    
+    new_window.iconbitmap('C:\\Users\\tejas\\Downloads\\favicon.ico')
+    new_window.attributes('-fullscreen',True)
+    table,rows_sum,rows=CODE.logic(lst,column)
+    Table(table,rows_sum,rows,new_window)
+    play_sound()
+def window4():
+    new_window=tk.Toplevel(parent)
+    video_source="C:/Users/tejas/Downloads/New Project 7 (2).mp4"
+    VideoBackground(new_window,video_source)
+    label1=tk.Label(new_window,bg="pink",fg="black",font=("Mistral",30),text="Help us giving feedback!")
+    label1.place(x=200,y=50)
+    label2=tk.Label(new_window,bg="pink",fg="black",font=("Mistral",30),text="Thank You!")
+    label2.place(x=200,y=150)
+    button=tk.Button(new_window,text="Exit",font="Stencil",bg="pink",fg="black",height=1,width=10,command=lambda:exit_gui(parent))
+    button.place(x=1350,y=700)
+    new_window.iconbitmap('C:\\Users\\tejas\\Downloads\\favicon.ico')
+    new_window.attributes('-fullscreen',True)
+    play_sound()
+def back_to_parent(w):
+    w.withdraw()
+    parent.deiconify()
+    play_sound()
+def exit_gui(window):
+        window.destroy()
+        play_sound()
+button1=tk.Button(parent,text="Submit",font="Stencil",bg="cyan",fg="black",height=1,width=10,command=window2)
+button1.place(x=700,y=400)
+button2=tk.Button(parent,text="Exit",font="Stencil",bg="pink",fg="black",height=1,width=10,command=lambda:exit_gui(parent))
+button2.place(x=1350,y=700)
+menu=tk.Menu(parent)
+parent.config(menu=menu)
+filemenu=tk.Menu(menu)
+menu.add_cascade(label='File', menu=filemenu)
+filemenu.add_command(label='New',command=lambda:back_to_parent(parent))
+filemenu.add_command(label='Open...  >')
+filemenu.add_separator()
+filemenu.add_command(label='Exit', command=lambda:exit_gui(parent))
+settingsmenu=tk.Menu(menu)
+menu.add_cascade(label='Sound', menu=settingsmenu)
+settingsmenu.add_command(label='Tap Sound On \u2713')
+helpmenu=tk.Menu(menu)
+menu.add_cascade(label='Help', menu=helpmenu)
+helpmenu.add_command(label='About')
+helpmenu.add_command(label='Contact')
+play_sound()
+mainloop()
